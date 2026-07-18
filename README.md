@@ -28,6 +28,10 @@ The build writes binaries to `bin\` and runs the included tests.
 
 ## Install For Current User
 
+For normal use, download the latest release zip from GitHub, extract it, then double-click `Install-AMFQuickLook.cmd`.
+
+For source checkouts, run:
+
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
 ```
@@ -42,6 +46,10 @@ If Windows already has a protected `UserChoice` file association for `.amf`, rig
 
 ## Uninstall
 
+From the release zip, double-click `Uninstall-AMFQuickLook.cmd`.
+
+From a source checkout, run:
+
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\uninstall.ps1
 ```
@@ -53,6 +61,14 @@ The uninstall script removes only registry keys owned by AMF QuickLook.
 ```powershell
 .\bin\AmfQuickLook.exe --thumbnail .\tests\fixtures\cube_multi.AMF .\preview.png 512
 ```
+
+## Build A Release Zip
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.0
+```
+
+The package is written to `dist\AMFQuickLook-v0.1.0-win-x64.zip`.
 
 ## Notes
 
