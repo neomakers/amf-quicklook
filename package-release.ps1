@@ -1,5 +1,5 @@
 param(
-    [string]$Version = '0.1.0'
+    [string]$Version = '0.1.1'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -9,6 +9,8 @@ $dist = Join-Path $root 'dist'
 $packageName = "AMFQuickLook-v$Version-win-x64"
 $staging = Join-Path $dist $packageName
 $zipPath = Join-Path $dist "$packageName.zip"
+$setupPath = Join-Path $dist "AMFQuickLookSetup-v$Version-win-x64.exe"
+$csc = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $root 'build.ps1')
 if ($LASTEXITCODE -ne 0) {
@@ -20,6 +22,9 @@ if (Test-Path $staging) {
 }
 if (Test-Path $zipPath) {
     Remove-Item -LiteralPath $zipPath -Force
+}
+if (Test-Path $setupPath) {
+    Remove-Item -LiteralPath $setupPath -Force
 }
 
 New-Item -ItemType Directory -Force -Path $staging | Out-Null
@@ -53,4 +58,28 @@ Set-Content -LiteralPath (Join-Path $staging 'INSTALL.txt') -Value $releaseReadm
 
 Compress-Archive -LiteralPath $staging -DestinationPath $zipPath -CompressionLevel Optimal
 
+$setupArgs = @(
+    '/nologo',
+    '/target:winexe',
+    '/optimize+',
+    '/platform:x64',
+    '/r:System.dll',
+    '/r:System.Core.dll',
+    '/r:System.Windows.Forms.dll',
+    '/r:Microsoft.CSharp.dll',
+    "/resource:$((Join-Path $root 'bin\AmfQuickLook.Core.dll')),payload.AmfQuickLook.Core.dll",
+    "/resource:$((Join-Path $root 'bin\AmfQuickLook.exe')),payload.AmfQuickLook.exe",
+    "/resource:$((Join-Path $root 'bin\AmfQuickLook.Shell.dll')),payload.AmfQuickLook.Shell.dll",
+    "/resource:$((Join-Path $root 'install.ps1')),payload.install.ps1",
+    "/resource:$((Join-Path $root 'uninstall.ps1')),payload.uninstall.ps1",
+    "/resource:$((Join-Path $root 'README.md')),payload.README.md",
+    "/out:$setupPath",
+    (Join-Path $root 'src\AmfQuickLookSetup.cs')
+)
+& $csc @setupArgs
+if ($LASTEXITCODE -ne 0) {
+    throw "Setup compiler failed."
+}
+
 Write-Host $zipPath
+Write-Host $setupPath

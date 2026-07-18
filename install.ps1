@@ -45,7 +45,7 @@ function Invoke-Reg {
 
 function Set-Default($path, $value) {
     New-Key $path
-    Invoke-Reg -RegArgs @('add', (Convert-RegPath $path), '/ve', '/d', $value, '/f')
+    Set-Item -Path $path -Value $value
 }
 
 function Set-String($path, $name, $value) {

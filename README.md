@@ -28,7 +28,11 @@ The build writes binaries to `bin\` and runs the included tests.
 
 ## Install For Current User
 
-For normal use, download the latest release zip from GitHub, extract it, then double-click `Install-AMFQuickLook.cmd`.
+For normal use, download the latest `AMFQuickLookSetup-*-win-x64.exe` from GitHub Releases and double-click it.
+
+The installer copies AMF QuickLook to `%LocalAppData%\Programs\AMF QuickLook`, creates Start Menu and desktop shortcuts, registers `.amf`, and adds a Windows uninstall entry.
+
+The release also includes a zip package for portable/manual installation.
 
 For source checkouts, run:
 
@@ -65,10 +69,13 @@ The uninstall script removes only registry keys owned by AMF QuickLook.
 ## Build A Release Zip
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.0
+powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.1
 ```
 
-The package is written to `dist\AMFQuickLook-v0.1.0-win-x64.zip`.
+The package script writes both:
+
+- `dist\AMFQuickLookSetup-v0.1.1-win-x64.exe`
+- `dist\AMFQuickLook-v0.1.1-win-x64.zip`
 
 ## Notes
 
