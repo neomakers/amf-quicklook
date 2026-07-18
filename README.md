@@ -1,0 +1,59 @@
+# AMF QuickLook
+
+AMF QuickLook is a lightweight Windows previewer for `.amf` / `.AMF` additive-manufacturing model files.
+
+It provides:
+
+- double-click viewing through a small WinForms 3D viewer;
+- mouse rotate, mouse wheel zoom, and right-drag pan;
+- PNG export and command-line thumbnail generation;
+- per-user Explorer Preview Pane and thumbnail registration;
+- XML/text Preview Pane fallback when Windows refuses to load custom shell handlers.
+
+## Requirements
+
+- Windows
+- .NET Framework 4.x runtime/compiler, normally already present at `C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe`
+- PowerShell
+
+No Python, Node.js, or NuGet packages are required.
+
+## Build
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
+```
+
+The build writes binaries to `bin\` and runs the included tests.
+
+## Install For Current User
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+After install:
+
+- double-click an `.amf` file to open AMF QuickLook;
+- press `Alt+P` in Explorer to show the Preview Pane;
+- reopen Explorer if thumbnails or preview handlers do not appear immediately.
+
+If Windows already has a protected `UserChoice` file association for `.amf`, right-click an AMF file, choose **Open with**, then choose AMF QuickLook once.
+
+## Uninstall
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\uninstall.ps1
+```
+
+The uninstall script removes only registry keys owned by AMF QuickLook.
+
+## Command-Line Thumbnail
+
+```powershell
+.\bin\AmfQuickLook.exe --thumbnail .\tests\fixtures\cube_multi.AMF .\preview.png 512
+```
+
+## Notes
+
+Windows Shell extensions are subject to Explorer caching and local policy. The installer registers a custom preview handler and thumbnail provider, and also sets `.amf` as XML/text so Preview Pane remains useful even if Windows blocks custom handler activation.
