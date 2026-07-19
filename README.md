@@ -69,13 +69,13 @@ The uninstall script removes only registry keys owned by AMF QuickLook.
 ## Build A Release Zip
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.2
 ```
 
 The package script writes both:
 
-- `dist\AMFQuickLookSetup-v0.1.1-win-x64.exe`
-- `dist\AMFQuickLook-v0.1.1-win-x64.zip`
+- `dist\AMFQuickLookSetup-v0.1.2-win-x64.exe`
+- `dist\AMFQuickLook-v0.1.2-win-x64.zip`
 
 ## Notes
 

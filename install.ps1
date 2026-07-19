@@ -60,7 +60,7 @@ function Set-EmptyString($path, $name) {
 
 function Register-DotNetCom($clsid, $name, $className, $dllPath) {
     $assemblyName = [System.Reflection.AssemblyName]::GetAssemblyName($dllPath).FullName
-    $codeBase = (New-Object System.Uri($dllPath)).AbsoluteUri
+    $codeBase = $dllPath
     $base = Join-Path $classes "CLSID\$clsid"
     $inproc = Join-Path $base 'InprocServer32'
     Set-Default $base $name

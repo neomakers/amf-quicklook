@@ -47,8 +47,13 @@ if (!$TestOnly) {
         /out:$app (Join-Path $src 'AmfQuickLookApp.cs')
 
     Invoke-Csc /nologo /target:library /optimize+ /platform:x64 `
-        /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Xml.dll /r:$core `
-        /out:$shell (Join-Path $src 'AmfShell.cs')
+        /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Xml.dll /r:System.Xml.Linq.dll `
+        /out:$shell (Join-Path $src 'AmfShell.cs') (Join-Path $src 'AmfCore.cs')
+
+    $shellRefs = [System.Reflection.Assembly]::ReflectionOnlyLoadFrom($shell).GetReferencedAssemblies() | ForEach-Object { $_.Name }
+    if ($shellRefs -contains 'AmfQuickLook.Core') {
+        throw 'Shell preview DLL must be self-contained and must not reference AmfQuickLook.Core.dll.'
+    }
 
     Write-Host "Built:"
     Write-Host "  $app"

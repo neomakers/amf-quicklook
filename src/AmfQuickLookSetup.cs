@@ -11,7 +11,7 @@ namespace AmfQuickLook.Setup
     internal static class Program
     {
         private const string AppName = "AMF QuickLook";
-        private const string Version = "0.1.1";
+        private const string Version = "0.1.2";
         private static readonly string InstallDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Programs",
