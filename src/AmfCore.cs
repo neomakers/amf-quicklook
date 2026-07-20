@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -118,10 +119,6 @@ namespace AmfQuickLook.Core
             if (!File.Exists(path)) throw new FileNotFoundException("AMF file not found.", path);
             if (renderTriangleLimit < 1) renderTriangleLimit = 1;
 
-            var doc = new AmfDocument { Path = path };
-            MeshObject current = null;
-            int objectIndex = 0;
-
             var settings = new XmlReaderSettings
             {
                 DtdProcessing = DtdProcessing.Prohibit,
@@ -129,7 +126,64 @@ namespace AmfQuickLook.Core
                 IgnoreWhitespace = true
             };
 
-            using (var reader = XmlReader.Create(path, settings))
+            using (var input = File.OpenRead(path))
+            {
+                if (!IsZipArchive(input))
+                {
+                    return ParseXml(input, path, renderTriangleLimit, settings);
+                }
+
+                using (var archive = new ZipArchive(input, ZipArchiveMode.Read, false))
+                {
+                    var entry = FindAmfEntry(archive);
+                    if (entry == null)
+                    {
+                        throw new InvalidDataException("Compressed AMF archive does not contain an .amf file.");
+                    }
+
+                    using (var entryStream = entry.Open())
+                    {
+                        return ParseXml(entryStream, path, renderTriangleLimit, settings);
+                    }
+                }
+            }
+        }
+
+        private static bool IsZipArchive(Stream stream)
+        {
+            int b0 = stream.ReadByte();
+            int b1 = stream.ReadByte();
+            int b2 = stream.ReadByte();
+            int b3 = stream.ReadByte();
+            stream.Position = 0;
+
+            return b0 == 0x50 && b1 == 0x4B &&
+                   ((b2 == 0x03 && b3 == 0x04) ||
+                    (b2 == 0x05 && b3 == 0x06) ||
+                    (b2 == 0x07 && b3 == 0x08));
+        }
+
+        private static ZipArchiveEntry FindAmfEntry(ZipArchive archive)
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (!string.IsNullOrEmpty(entry.Name) &&
+                    string.Equals(Path.GetExtension(entry.Name), ".amf", StringComparison.OrdinalIgnoreCase))
+                {
+                    return entry;
+                }
+            }
+
+            return null;
+        }
+
+        private static AmfDocument ParseXml(Stream input, string path, int renderTriangleLimit, XmlReaderSettings settings)
+        {
+            var doc = new AmfDocument { Path = path };
+            MeshObject current = null;
+            int objectIndex = 0;
+
+            using (var reader = XmlReader.Create(input, settings))
             {
                 while (true)
                 {

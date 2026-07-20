@@ -32,7 +32,7 @@ $shell = Join-Path $bin 'AmfQuickLook.Shell.dll'
 $tests = Join-Path $bin 'AmfQuickLook.Tests.exe'
 
 Invoke-Csc /nologo /target:library /optimize+ /platform:x64 `
-    /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Xml.dll /r:System.Xml.Linq.dll `
+    /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.IO.Compression.dll /r:System.Windows.Forms.dll /r:System.Xml.dll /r:System.Xml.Linq.dll `
     /out:$core (Join-Path $src 'AmfCore.cs')
 
 Invoke-Csc /nologo /target:exe /optimize+ /platform:x64 `
@@ -47,7 +47,7 @@ if (!$TestOnly) {
         /out:$app (Join-Path $src 'AmfQuickLookApp.cs')
 
     Invoke-Csc /nologo /target:library /optimize+ /platform:x64 `
-        /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Xml.dll /r:System.Xml.Linq.dll `
+        /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.IO.Compression.dll /r:System.Windows.Forms.dll /r:System.Xml.dll /r:System.Xml.Linq.dll `
         /out:$shell (Join-Path $src 'AmfShell.cs') (Join-Path $src 'AmfCore.cs')
 
     $shellRefs = [System.Reflection.Assembly]::ReflectionOnlyLoadFrom($shell).GetReferencedAssemblies() | ForEach-Object { $_.Name }

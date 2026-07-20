@@ -13,6 +13,7 @@ internal static class AmfQuickLookTests
         {
             ParsesSingleCube();
             ParsesMultipleColoredObjects();
+            ParsesCompressedFreeCadArchive();
             RendersThumbnailPng();
             Console.WriteLine("All AMF QuickLook tests passed.");
             return 0;
@@ -45,6 +46,15 @@ internal static class AmfQuickLookTests
         AssertNear(1, doc.Objects[0].Color.R / 255.0, "first object red");
         AssertNear(1, doc.Objects[1].Color.G / 255.0, "second object green channel");
         AssertNear(0, doc.Objects[2].Color.R / 255.0, "third object red channel");
+    }
+
+    private static void ParsesCompressedFreeCadArchive()
+    {
+        var doc = AmfParser.Parse(Path.Combine(SampleRoot, "freecad_compressed.AMF"), 1000);
+        AssertEqual("millimeter", doc.Unit, "compressed unit");
+        AssertEqual(3, doc.Objects.Count, "compressed object count");
+        AssertEqual(32, doc.VertexCount, "compressed vertex count");
+        AssertEqual(52, doc.TriangleCount, "compressed triangle count");
     }
 
     private static void RendersThumbnailPng()

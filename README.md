@@ -8,6 +8,7 @@ It provides:
 - mouse rotate, mouse wheel zoom, and right-drag pan;
 - PNG export and command-line thumbnail generation;
 - per-user Explorer Preview Pane and thumbnail registration;
+- plain XML AMF and ZIP-compressed AMF support, including FreeCAD exports;
 - XML/text Preview Pane fallback when Windows refuses to load custom shell handlers.
 
 ## Requirements
@@ -69,13 +70,13 @@ The uninstall script removes only registry keys owned by AMF QuickLook.
 ## Build A Release Zip
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.2
+powershell -NoProfile -ExecutionPolicy Bypass -File .\package-release.ps1 -Version 0.1.3
 ```
 
 The package script writes both:
 
-- `dist\AMFQuickLookSetup-v0.1.2-win-x64.exe`
-- `dist\AMFQuickLook-v0.1.2-win-x64.zip`
+- `dist\AMFQuickLookSetup-v0.1.3-win-x64.exe`
+- `dist\AMFQuickLook-v0.1.3-win-x64.zip`
 
 ## Notes
 
